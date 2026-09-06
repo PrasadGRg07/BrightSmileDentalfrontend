@@ -9,6 +9,7 @@ import api from "../utils/api";
 const statusColors = {
   Pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
   Confirmed: "bg-blue-50 text-blue-700 border-blue-200",
+  Needs_Reschedule: "bg-orange-50 text-orange-700 border-orange-200",
   Completed: "bg-green-50 text-green-700 border-green-200",
   Cancelled: "bg-red-50 text-red-700 border-red-200",
 };
@@ -84,6 +85,7 @@ export default function AdminBookings() {
     .filter(a => filterStatus === "All" || a.status === filterStatus);
 
   const pending = appointments.filter(a => a.status === "Pending").length;
+  const needsReschedule = appointments.filter(a => a.status === "Needs_Reschedule").length;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -95,6 +97,11 @@ export default function AdminBookings() {
             {pending > 0 && (
               <span className="ml-2 text-yellow-700 bg-yellow-50 border border-yellow-200 px-2 py-0.5 rounded-full text-xs font-medium">
                 {pending} pending
+              </span>
+            )}
+            {needsReschedule > 0 && (
+              <span className="ml-2 text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full text-xs font-medium">
+                {needsReschedule} need reschedule
               </span>
             )}
           </p>
@@ -114,17 +121,19 @@ export default function AdminBookings() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {["All", "Pending", "Confirmed", "Completed", "Cancelled"].map(s => (
+          {["All", "Pending", "Needs_Reschedule", "Confirmed", "Completed", "Cancelled"].map(s => (
             <button
               key={s}
               onClick={() => setFilterStatus(s)}
               className={`px-3 py-2 rounded-xl text-xs font-medium border transition ${
                 filterStatus === s
                   ? "bg-blue-700 text-white border-blue-700"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-blue-400"
+                  : s === "Needs_Reschedule"
+                    ? "bg-orange-50 text-orange-700 border-orange-200 hover:border-orange-400"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-blue-400"
               }`}
             >
-              {s}
+              {s === "Needs_Reschedule" ? "⏳ Needs Reschedule" : s}
             </button>
           ))}
         </div>
@@ -217,7 +226,13 @@ export default function AdminBookings() {
                       <p className="text-xs text-blue-700 font-medium">Rs. {Number(a.service_details.price).toLocaleString()}</p>
                     )}
                     {a.notes && (
-                      <p className="text-xs text-gray-400 mt-2 italic">"{a.notes}"</p>
+                      <p className="text-xs text-gray-400 italic mt-1">"{a.notes}"</p>
+                    )}
+                    {a.receptionist_note && (
+                      <div className="mt-3 bg-orange-50 border border-orange-200 rounded-xl px-3 py-2">
+                        <p className="text-xs font-semibold text-orange-700 mb-0.5">📝 Receptionist Note:</p>
+                        <p className="text-xs text-orange-800">{a.receptionist_note}</p>
+                      </div>
                     )}
                   </div>
 
