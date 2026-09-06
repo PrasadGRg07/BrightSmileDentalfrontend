@@ -81,12 +81,14 @@ function App() {
           <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard/doctor" element={<DoctorDashboard />} />
-          <Route path="/dashboard/dentist" element={<DentistDashboard />} />
-          <Route path="/dashboard/patient" element={<PatientDashboard />} />
-          <Route path="/dashboard/receptionist" element={<ReceptionistDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+
+        {/* Role-based dashboards — no Navbar or Footer */}
+        <Route path="/dashboard/doctor" element={<DoctorDashboard />} />
+        <Route path="/dashboard/dentist" element={<DentistDashboard />} />
+        <Route path="/dashboard/patient" element={<PatientDashboard />} />
+        <Route path="/dashboard/receptionist" element={<ReceptionistDashboard />} />
       </Routes>
     </Router>
   );
