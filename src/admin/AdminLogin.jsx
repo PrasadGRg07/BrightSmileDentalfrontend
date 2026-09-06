@@ -98,18 +98,9 @@ export default function AdminLogin() {
               type="submit"
               className="w-full bg-blue-900 text-white font-medium py-3 rounded-xl hover:bg-blue-800 transition"
             >
-              Login to Dashboard
+              Login
             </button>
           </form>
-
-          <div className="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-100 text-sm text-blue-800 flex gap-2">
-            <FaInfoCircle className="mt-0.5 shrink-0" />
-            <div>
-              Demo credentials:
-              <br />
-              <strong>admin</strong> / <strong>admin</strong>
-            </div>
-          </div>
         </div>
       </div>
     </div>
