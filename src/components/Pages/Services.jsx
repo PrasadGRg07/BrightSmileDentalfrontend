@@ -10,6 +10,8 @@ import {
   FaChild,
   FaCheckCircle,
   FaArrowRight,
+  FaClock,
+  FaTag,
 } from "react-icons/fa";
 
 const categories = [
@@ -97,8 +99,64 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="max-w-6xl mx-auto px-4 py-20">
+      {/* Live Services from Database */}
+      {dbServices.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-blue-900">Available Treatments & Pricing</h2>
+            <p className="text-gray-500 mt-2">Book any of these services directly online.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {dbServices.map((s) => (
+              <div
+                key={s.id}
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col"
+              >
+                {/* Card Header */}
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-blue-700 text-white flex items-center justify-center text-xl shadow-sm shrink-0">
+                    <FaTooth />
+                  </div>
+                  <h3 className="font-bold text-blue-900 text-lg leading-tight">{s.name}</h3>
+                </div>
+
+                {/* Card Body */}
+                <div className="p-5 flex flex-col flex-1">
+                  <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                    {s.description || "A professional dental treatment provided by our expert team."}
+                  </p>
+
+                  {/* Price & Duration */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-blue-700 font-bold text-lg">
+                      <FaTag size={14} />
+                      Rs. {Number(s.price).toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-gray-400 text-sm">
+                      <FaClock size={12} />
+                      {s.duration_minutes} mins
+                    </div>
+                  </div>
+
+                  <Link
+                    to="/booking"
+                    className="mt-4 flex items-center justify-center gap-2 w-full bg-blue-700 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-blue-800 transition"
+                  >
+                    Book Now <FaArrowRight size={12} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* General Categories */}
+      <section className="max-w-6xl mx-auto px-4 pb-20">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-blue-900">All Treatment Categories</h2>
+          <p className="text-gray-500 mt-2">Everything we offer at Bright Smile Dental.</p>
+        </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat) => (
             <div
@@ -112,7 +170,7 @@ export default function Services() {
               <ul className="space-y-2">
                 {cat.items.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-gray-600 text-sm">
-                    <FaCheckCircle className="text-green-500 mt-0.5" />
+                    <FaCheckCircle className="text-green-500 mt-0.5 shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -122,40 +180,21 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Full list strip */}
-      <section className="bg-white border-t border-b py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-blue-900 text-center mb-8">
-            Treatments We Offer
-          </h2>
-          <div className="flex flex-wrap gap-3 justify-center">
-            {dbServices.map((s) => (
-              <span
-                key={s.id}
-                className="bg-blue-50 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
-              >
-                {s.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="max-w-6xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-4">
-          Not Sure What You Need?
-        </h2>
-        <p className="text-gray-500 max-w-xl mx-auto mb-8">
-          Book a consultation and our team will help you find the right treatment
-          for your needs.
-        </p>
-        <Link
-          to="/booking"
-          className="inline-flex items-center gap-2 bg-blue-700 text-white font-medium px-8 py-3 rounded-xl hover:bg-blue-800 transition"
-        >
-          Book a Consultation <FaArrowRight />
-        </Link>
+      <section className="bg-blue-900 py-16">
+        <div className="max-w-6xl mx-auto px-4 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Not Sure What You Need?</h2>
+          <p className="text-blue-200 max-w-xl mx-auto mb-8">
+            Book a consultation and our team will help you find the right treatment
+            for your needs.
+          </p>
+          <Link
+            to="/booking"
+            className="inline-flex items-center gap-2 bg-cyan-400 text-blue-950 font-semibold px-8 py-3 rounded-xl hover:bg-cyan-300 transition"
+          >
+            Book a Consultation <FaArrowRight />
+          </Link>
+        </div>
       </section>
     </div>
   );

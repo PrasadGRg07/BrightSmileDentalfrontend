@@ -23,10 +23,13 @@ function Booking() {
       .then(res => setServices(res.data))
       .catch(console.error);
 
-    // Fetch Dentists
-    api.get("users/?role=Dentist")
-      .then(res => setDentists(res.data))
-      .catch(console.error);
+    // Fetch Doctors AND Dentists
+    Promise.all([
+      api.get("users/?role=Doctor"),
+      api.get("users/?role=Dentist")
+    ]).then(([docRes, dentRes]) => {
+      setDentists([...docRes.data, ...dentRes.data]);
+    }).catch(console.error);
   }, []);
 
   const handleChange = (e) => {
@@ -104,7 +107,7 @@ function Booking() {
             >
               <option value="">Select Service</option>
               {services.map(s => (
-                <option key={s.id} value={s.id}>{s.name} (${s.price})</option>
+                <option key={s.id} value={s.id}>{s.name} (Rs. {Number(s.price).toLocaleString()})</option>
               ))}
             </select>
 

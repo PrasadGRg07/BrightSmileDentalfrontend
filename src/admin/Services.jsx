@@ -88,7 +88,7 @@ export default function AdminServices() {
             <h3 className="font-semibold text-slate-900">{s.name}</h3>
             <p className="text-sm text-gray-500 mt-1 flex-1">{s.description || "No description provided."}</p>
             <div className="mt-4 flex items-center justify-between border-t pt-3 border-gray-100">
-              <span className="text-blue-700 font-bold">${s.price}</span>
+              <span className="text-blue-700 font-bold">Rs. {Number(s.price).toLocaleString()}</span>
               <span className="text-gray-400 text-sm">{s.duration_minutes} mins</span>
             </div>
           </div>
