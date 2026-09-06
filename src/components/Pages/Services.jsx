@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { allServices } from "../../data/services";
+import api from "../../utils/api";
 import {
   FaTooth,
   FaSmile,
@@ -75,6 +76,14 @@ const categories = [
 ];
 
 export default function Services() {
+  const [dbServices, setDbServices] = useState([]);
+
+  useEffect(() => {
+    api.get("services/")
+      .then(res => setDbServices(res.data))
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="bg-gray-50 text-gray-800">
       {/* Hero */}
@@ -120,12 +129,12 @@ export default function Services() {
             Treatments We Offer
           </h2>
           <div className="flex flex-wrap gap-3 justify-center">
-            {allServices.map((s) => (
+            {dbServices.map((s) => (
               <span
-                key={s}
+                key={s.id}
                 className="bg-blue-50 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
               >
-                {s}
+                {s.name}
               </span>
             ))}
           </div>

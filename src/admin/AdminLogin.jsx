@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaLock, FaShieldAlt, FaEye, FaEyeSlash, FaArrowLeft, FaInfoCircle } from "react-icons/fa";
-import { adminLogin } from "../utils/store";
+import api from "../utils/api";
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -13,11 +13,18 @@ export default function AdminLogin() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (adminLogin(form.email, form.password)) {
+    try {
+      const res = await api.post("auth/login/", {
+        username: form.email,
+        password: form.password
+      });
+      localStorage.setItem("accessToken", res.data.access);
+      localStorage.setItem("refreshToken", res.data.refresh);
+      localStorage.setItem("adminLoggedIn", "true");
       navigate("/admin/dashboard", { replace: true });
-    } else {
+    } catch (err) {
       setError("Invalid email or password. Please try again.");
     }
   };

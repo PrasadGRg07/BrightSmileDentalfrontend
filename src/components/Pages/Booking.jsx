@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
-import { addAppointment } from "../../utils/store";
+import api from "../../utils/api";
 
 function Booking() {
+  const [services, setServices] = useState([]);
+  const [dentists, setDentists] = useState([]);
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
+    dentist: "",
     service: "",
     date: "",
-    time: ""
+    time: "",
+    notes: ""
   });
   const [booked, setBooked] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch Services
+    api.get("services/")
+      .then(res => setServices(res.data))
+      .catch(console.error);
+
+    // Fetch Dentists
+    api.get("users/?role=Dentist")
+      .then(res => setDentists(res.data))
+      .catch(console.error);
+  }, []);
 
   const handleChange = (e) => {
     setForm({
@@ -20,11 +36,29 @@ function Booking() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addAppointment(form);
-    setBooked(true);
-    setForm({ name: "", email: "", phone: "", service: "", date: "", time: "" });
+    setError("");
+
+    if (!localStorage.getItem("accessToken")) {
+      setError("Please log in to book an appointment.");
+      return;
+    }
+
+    try {
+      const dateTime = new Date(`${form.date}T${form.time}`).toISOString();
+      await api.post("appointments/", {
+        dentist: form.dentist,
+        service: form.service,
+        date_time: dateTime,
+        notes: form.notes
+      });
+      
+      setBooked(true);
+      setForm({ dentist: "", service: "", date: "", time: "", notes: "" });
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to book appointment. Please try again.");
+    }
   };
 
   const inputClass =
@@ -32,7 +66,6 @@ function Booking() {
 
   return (
     <div className="bg-gray-50 text-gray-800">
-      {/* Hero */}
       <section className="bg-gradient-to-r from-blue-900 to-cyan-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Book an Appointment</h1>
@@ -50,53 +83,42 @@ function Booking() {
               <FaCheckCircle /> Appointment booked successfully! We'll be in touch.
             </div>
           )}
+          {error && (
+            <div className="flex items-center gap-2 bg-red-50 text-red-700 border border-red-200 px-4 py-3 rounded-xl mb-4">
+              {error}
+              {error.includes("log in") && (
+                <button onClick={() => navigate("/login")} className="ml-auto underline font-bold">
+                  Login
+                </button>
+              )}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              name="name"
-              required
-              placeholder="Full Name"
-              className={inputClass}
-              onChange={handleChange}
-            />
-
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="Email"
-              className={inputClass}
-              onChange={handleChange}
-            />
-
-            <input
-              type="tel"
-              name="phone"
-              required
-              placeholder="Phone Number"
-              className={inputClass}
-              onChange={handleChange}
-            />
-
             <select
               name="service"
               required
               className={inputClass}
               onChange={handleChange}
+              value={form.service}
             >
               <option value="">Select Service</option>
-              <option>Dental Cleaning</option>
-              <option>Teeth Whitening</option>
-              <option>Dental Checkup</option>
-              <option>Root Canal Treatment</option>
-              <option>Crowns & Bridges</option>
-              <option>Dental Implants</option>
-              <option>Braces & Aligners</option>
-              <option>Tooth Extraction</option>
-              <option>Veneers</option>
-              <option>Dentures</option>
-              <option>Pediatric Care</option>
+              {services.map(s => (
+                <option key={s.id} value={s.id}>{s.name} (${s.price})</option>
+              ))}
+            </select>
+
+            <select
+              name="dentist"
+              required
+              className={inputClass}
+              onChange={handleChange}
+              value={form.dentist}
+            >
+              <option value="">Select Dentist</option>
+              {dentists.map(d => (
+                <option key={d.id} value={d.id}>Dr. {d.first_name} {d.last_name}</option>
+              ))}
             </select>
 
             <input
@@ -105,6 +127,7 @@ function Booking() {
               required
               className={inputClass}
               onChange={handleChange}
+              value={form.date}
             />
 
             <select
@@ -112,15 +135,25 @@ function Booking() {
               required
               className={inputClass}
               onChange={handleChange}
+              value={form.time}
             >
               <option value="">Select Time</option>
-              <option>10:00 AM</option>
-              <option>11:00 AM</option>
-              <option>12:00 PM</option>
-              <option>2:00 PM</option>
-              <option>3:00 PM</option>
-              <option>4:00 PM</option>
+              <option value="10:00:00">10:00 AM</option>
+              <option value="11:00:00">11:00 AM</option>
+              <option value="12:00:00">12:00 PM</option>
+              <option value="14:00:00">2:00 PM</option>
+              <option value="15:00:00">3:00 PM</option>
+              <option value="16:00:00">4:00 PM</option>
             </select>
+            
+            <textarea
+              name="notes"
+              placeholder="Any additional notes?"
+              className={inputClass}
+              onChange={handleChange}
+              value={form.notes}
+              rows="3"
+            ></textarea>
 
             <button
               type="submit"

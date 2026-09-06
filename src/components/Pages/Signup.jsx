@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTooth, FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../../utils/api";
 
 export default function Signup() {
   const [showPwd, setShowPwd] = useState(false);
@@ -12,19 +13,38 @@ export default function Signup() {
     password: "",
     confirm: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     if (form.password !== form.confirm) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    navigate("/");
+    
+    try {
+      const parts = form.name.trim().split(" ");
+      const first_name = parts[0] || "";
+      const last_name = parts.slice(1).join(" ") || "";
+      
+      await api.post("auth/register/", {
+        username: form.email,
+        email: form.email,
+        password: form.password,
+        first_name,
+        last_name,
+        phone_number: form.phone
+      });
+      navigate("/login");
+    } catch (err) {
+      setError(err.response?.data?.error || "Registration failed");
+    }
   };
 
   const inputClass =
@@ -38,6 +58,12 @@ export default function Signup() {
           <h2 className="text-2xl font-bold text-blue-900">Create Account</h2>
           <p className="text-gray-500 text-sm">Join Bright Smile Dental</p>
         </div>
+
+        {error && (
+          <div className="mb-4 bg-red-100 text-red-600 p-3 rounded-lg text-sm text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

@@ -1,19 +1,33 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTooth, FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../../utils/api";
 
 export default function Login() {
   const [showPwd, setShowPwd] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/");
+    setError("");
+    try {
+      const res = await api.post("auth/login/", {
+        username: form.email,
+        password: form.password
+      });
+      localStorage.setItem("accessToken", res.data.access);
+      localStorage.setItem("refreshToken", res.data.refresh);
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.detail || "Invalid credentials");
+    }
   };
 
   return (
@@ -24,6 +38,12 @@ export default function Login() {
           <h2 className="text-2xl font-bold text-blue-900">Welcome Back</h2>
           <p className="text-gray-500 text-sm">Log in to your account</p>
         </div>
+
+        {error && (
+          <div className="mb-4 bg-red-100 text-red-600 p-3 rounded-lg text-sm text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
