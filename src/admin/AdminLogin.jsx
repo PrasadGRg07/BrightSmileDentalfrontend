@@ -4,7 +4,7 @@ import { FaLock, FaShieldAlt, FaEye, FaEyeSlash, FaArrowLeft, FaInfoCircle } fro
 import api from "../utils/api";
 
 export default function AdminLogin() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const res = await api.post("auth/login/", {
-        username: form.email,
+        username: form.username,
         password: form.password
       });
       localStorage.setItem("accessToken", res.data.access);
@@ -25,7 +25,7 @@ export default function AdminLogin() {
       localStorage.setItem("adminLoggedIn", "true");
       navigate("/admin/dashboard", { replace: true });
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      setError("Invalid username or password. Please try again.");
     }
   };
 
@@ -59,14 +59,14 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                Username
               </label>
               <input
-                type="email"
-                name="email"
+                type="text"
+                name="username"
                 required
-                placeholder="admin@brightsmile.com"
-                value={form.email}
+                placeholder="admin"
+                value={form.username}
                 onChange={handleChange}
                 className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -107,7 +107,7 @@ export default function AdminLogin() {
             <div>
               Demo credentials:
               <br />
-              <strong>admin@brightsmile.com</strong> / <strong>admin123</strong>
+              <strong>admin</strong> / <strong>admin</strong>
             </div>
           </div>
         </div>
