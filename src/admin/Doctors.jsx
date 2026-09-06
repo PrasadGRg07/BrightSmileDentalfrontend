@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaGraduationCap, FaBriefcaseMedical, FaEdit, FaTimes } from "react-icons/fa";
+import { FaArrowRight, FaGraduationCap, FaBriefcaseMedical, FaEdit, FaTimes, FaPlus } from "react-icons/fa";
 import api from "../utils/api";
 
 export default function AdminDoctors() {
@@ -26,6 +26,11 @@ export default function AdminDoctors() {
     setForm(doctor);
   };
 
+  const handleCreate = () => {
+    setEditingDoctor({ isNew: true });
+    setForm({ role: 'Doctor' }); // Default role
+  };
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -33,11 +38,16 @@ export default function AdminDoctors() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.put(`users/${editingDoctor.id}/`, form);
+      if (editingDoctor.isNew) {
+        await api.post("users/", form);
+      } else {
+        await api.put(`users/${editingDoctor.id}/`, form);
+      }
       setEditingDoctor(null);
       fetchDoctors();
     } catch (err) {
       console.error(err);
+      alert(err.response?.data?.error || "Error saving doctor.");
     }
   };
 
@@ -50,6 +60,12 @@ export default function AdminDoctors() {
             {doctors.length} doctors displayed on the website.
           </p>
         </div>
+        <button
+          onClick={handleCreate}
+          className="inline-flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-xl hover:bg-blue-800 transition"
+        >
+          <FaPlus /> Add Doctor
+        </button>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
@@ -95,7 +111,9 @@ export default function AdminDoctors() {
         <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">Edit Doctor Profile</h2>
+              <h2 className="text-2xl font-bold text-slate-900">
+                {editingDoctor.isNew ? "Add New Doctor" : "Edit Doctor Profile"}
+              </h2>
               <button onClick={() => setEditingDoctor(null)} className="text-gray-400 hover:text-gray-600 p-2 bg-gray-100 rounded-full transition">
                 <FaTimes />
               </button>
@@ -111,6 +129,27 @@ export default function AdminDoctors() {
                   <input type="text" name="last_name" value={form.last_name || ""} onChange={handleChange} className="w-full border border-gray-200 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
                 </div>
               </div>
+
+              {editingDoctor.isNew && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" name="username" value={form.username || ""} onChange={handleChange} className="w-full border border-gray-200 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" name="password" value={form.password || ""} onChange={handleChange} className="w-full border border-gray-200 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                  </div>
+                </div>
+              )}
+
+              {editingDoctor.isNew && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input type="email" name="email" value={form.email || ""} onChange={handleChange} className="w-full border border-gray-200 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
                 <input type="text" name="specialty" value={form.specialty || ""} placeholder="e.g. Orthodontist" onChange={handleChange} className="w-full border border-gray-200 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
@@ -133,7 +172,7 @@ export default function AdminDoctors() {
               </div>
               <div className="pt-2">
                 <button type="submit" className="w-full bg-blue-700 text-white p-3 rounded-xl font-medium hover:bg-blue-800 transition">
-                  Save Changes
+                  {editingDoctor.isNew ? "Create Doctor" : "Save Changes"}
                 </button>
               </div>
             </form>

@@ -5,9 +5,8 @@ import api from "../../utils/api";
 
 export default function Login() {
   const [showPwd, setShowPwd] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
-
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -18,15 +17,38 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
+      // Step 1: Login to get tokens
       const res = await api.post("auth/login/", {
-        username: form.email,
-        password: form.password
+        username: form.username,
+        password: form.password,
       });
       localStorage.setItem("accessToken", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);
-      navigate("/");
+
+      // Step 2: Fetch current user's profile to get their role
+      const profileRes = await api.get("auth/me/");
+      const user = profileRes.data;
+      localStorage.setItem("userRole", user.role);
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("userFullName", `${user.first_name} ${user.last_name}`.trim() || user.username);
+
+      // Step 3: Redirect based on role
+      const role = user.role;
+      if (role === "Admin") {
+        localStorage.setItem("adminLoggedIn", "true");
+        navigate("/admin/dashboard", { replace: true });
+      } else if (role === "Doctor") {
+        navigate("/dashboard/doctor", { replace: true });
+      } else if (role === "Dentist") {
+        navigate("/dashboard/dentist", { replace: true });
+      } else if (role === "Receptionist") {
+        navigate("/dashboard/receptionist", { replace: true });
+      } else {
+        // Patient or any other role
+        navigate("/dashboard/patient", { replace: true });
+      }
     } catch (err) {
-      setError(err.response?.data?.detail || "Invalid credentials");
+      setError(err.response?.data?.detail || "Invalid username or password");
     }
   };
 
@@ -47,13 +69,13 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
             <input
-              type="email"
-              name="email"
+              type="text"
+              name="username"
               required
-              placeholder="you@example.com"
-              value={form.email}
+              placeholder="Your username"
+              value={form.username}
               onChange={handleChange}
               className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

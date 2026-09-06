@@ -9,7 +9,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { getAppointments, getMessages } from "../utils/store";
-import { services } from "../data/services";
+
 const statusColors = {
   pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
   confirmed: "bg-blue-50 text-blue-700 border-blue-200",
@@ -21,10 +21,15 @@ export default function Dashboard() {
   const [appointments] = useState(getAppointments);
   const [messages] = useState(getMessages);
   const [doctorCount, setDoctorCount] = useState(0);
+  const [serviceCount, setServiceCount] = useState(0);
 
   useEffect(() => {
     api.get("users/?role=Doctor").then((res) => {
       setDoctorCount(res.data.length);
+    }).catch(console.error);
+
+    api.get("services/").then((res) => {
+      setServiceCount(res.data.length);
     }).catch(console.error);
   }, []);
 
@@ -45,7 +50,7 @@ export default function Dashboard() {
     },
     {
       label: "Services",
-      value: services.length,
+      value: serviceCount,
       icon: FaTooth,
       to: "/admin/services",
       color: "bg-emerald-600",

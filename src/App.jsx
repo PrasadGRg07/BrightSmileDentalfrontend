@@ -7,6 +7,10 @@ import AboutUs from "./components/Pages/AboutUs";
 import Services from "./components/Pages/Services";
 import Contact from "./components/Pages/Contact";
 import DoctorDetail from "./components/Pages/DoctorDetail";
+import DoctorDashboard from "./components/Pages/DoctorDashboard";
+import DentistDashboard from "./components/Pages/DentistDashboard";
+import PatientDashboard from "./components/Pages/PatientDashboard";
+import ReceptionistDashboard from "./components/Pages/ReceptionistDashboard";
 import Login from "./components/Pages/Login";
 import Signup from "./components/Pages/Signup";
 import AdminLogin from "./admin/AdminLogin";
@@ -77,6 +81,10 @@ function App() {
           <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard/doctor" element={<DoctorDashboard />} />
+          <Route path="/dashboard/dentist" element={<DentistDashboard />} />
+          <Route path="/dashboard/patient" element={<PatientDashboard />} />
+          <Route path="/dashboard/receptionist" element={<ReceptionistDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
