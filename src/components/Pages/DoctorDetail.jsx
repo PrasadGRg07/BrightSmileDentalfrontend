@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   FaArrowLeft,
@@ -6,13 +7,29 @@ import {
   FaLanguage,
   FaCheckCircle,
   FaCalendarCheck,
+  FaCalendarAlt,
+  FaUserMd
 } from "react-icons/fa";
-import { getDoctorById } from "../../data/doctors";
+import api from "../../utils/api";
 import DoctorsSection from "../Doctors/DoctorsSection";
 
 export default function DoctorDetail() {
   const { id } = useParams();
-  const doctor = getDoctorById(id);
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get(`users/${id}/`)
+      .then(res => {
+        setDoctor(res.data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-gray-50">Loading doctor profile...</div>;
+  }
 
   if (!doctor) {
     return (
@@ -40,23 +57,23 @@ export default function DoctorDetail() {
             <FaArrowLeft /> Back to About Us
           </Link>
           <div className="grid md:grid-cols-[280px_1fr] gap-8 items-center">
-            <div className="w-64 h-64 rounded-2xl overflow-hidden ring-4 ring-cyan-400/40 shadow-xl bg-white mx-auto md:mx-0">
-              <img
-                src={doctor.image}
-                alt={doctor.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="w-64 h-64 rounded-2xl overflow-hidden ring-4 ring-cyan-400/40 shadow-xl bg-white mx-auto md:mx-0 flex items-center justify-center text-8xl text-blue-200">
+              <FaUserMd />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{doctor.name}</h1>
-              <p className="text-cyan-300 text-xl font-medium mb-4">{doctor.specialty}</p>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{doctor.first_name} {doctor.last_name}</h1>
+              <p className="text-cyan-300 text-xl font-medium mb-4">{doctor.specialty || "General Dentist"}</p>
               <div className="flex flex-wrap gap-4 text-sm">
-                <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <FaGraduationCap /> {doctor.education}
-                </span>
-                <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-                  <FaBriefcaseMedical /> {doctor.experience} experience
-                </span>
+                {doctor.education && (
+                  <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                    <FaGraduationCap /> {doctor.education}
+                  </span>
+                )}
+                {doctor.experience && (
+                  <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                    <FaBriefcaseMedical /> {doctor.experience} experience
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -65,42 +82,33 @@ export default function DoctorDetail() {
 
       {/* Detail */}
       <section className="max-w-6xl mx-auto px-4 py-16 grid lg:grid-cols-[1fr_360px] gap-10">
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-md">
-          <h2 className="text-2xl font-bold text-blue-900 mb-4">About</h2>
-          <p className="text-gray-600 leading-relaxed mb-6">{doctor.bio}</p>
-
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">
-            Treatments & Specialties
-          </h3>
-          <ul className="space-y-2">
-            {doctor.services.map((s) => (
-              <li key={s} className="flex items-start gap-2 text-gray-700">
-                <FaCheckCircle className="text-green-500 mt-1" />
-                {s}
-              </li>
-            ))}
-          </ul>
+        <div className="space-y-6">
+          <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-md">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4">About</h2>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              {doctor.bio || "This doctor has not provided a bio yet."}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-md">
             <h3 className="text-lg font-semibold text-blue-900 mb-4">
-              Languages Spoken
+              Schedule & Availability
             </h3>
-            <div className="flex flex-wrap gap-2">
-              {doctor.languages.map((l) => (
-                <span
-                  key={l}
-                  className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm"
-                >
-                  <FaLanguage /> {l}
-                </span>
-              ))}
+            <div className="flex items-start gap-3">
+              <FaCalendarAlt className="text-blue-700 mt-1 shrink-0" size={18} />
+              <div>
+                <p className="font-medium text-slate-800">Working Days</p>
+                <p className="text-gray-600 mt-1 leading-relaxed">
+                  {doctor.work_days || "Schedule not updated."}
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="bg-blue-900 text-white p-8 rounded-2xl shadow-md">
-            <h3 className="text-xl font-bold mb-2">Book with {doctor.name}</h3>
+            <h3 className="text-xl font-bold mb-2">Book with Dr. {doctor.last_name || doctor.first_name}</h3>
             <p className="text-blue-200 mb-6">
               Schedule your appointment today at Bright Smile Dental.
             </p>

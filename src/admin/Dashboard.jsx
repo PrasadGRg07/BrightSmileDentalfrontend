@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 import {
   FaCalendarCheck,
   FaEnvelope,
@@ -9,8 +10,6 @@ import {
 } from "react-icons/fa";
 import { getAppointments, getMessages } from "../utils/store";
 import { services } from "../data/services";
-import { doctors } from "../data/doctors";
-
 const statusColors = {
   pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
   confirmed: "bg-blue-50 text-blue-700 border-blue-200",
@@ -21,6 +20,13 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [appointments] = useState(getAppointments);
   const [messages] = useState(getMessages);
+  const [doctorCount, setDoctorCount] = useState(0);
+
+  useEffect(() => {
+    api.get("users/?role=Doctor").then((res) => {
+      setDoctorCount(res.data.length);
+    }).catch(console.error);
+  }, []);
 
   const stats = [
     {
@@ -46,7 +52,7 @@ export default function Dashboard() {
     },
     {
       label: "Doctors",
-      value: doctors.length,
+      value: doctorCount,
       icon: FaUserMd,
       to: "/admin/doctors",
       color: "bg-purple-600",
