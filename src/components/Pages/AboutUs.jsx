@@ -7,6 +7,7 @@ import {
   FaBriefcaseMedical,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import DoctorsSection from "../Doctors/DoctorsSection";
 
 const values = [
   {
@@ -33,7 +34,7 @@ const values = [
 
 export default function AboutUs() {
   return (
-    <div className="bg-gray-50 text-gray-800 pt-16">
+    <div className="bg-gray-50 text-gray-800">
       {/* Hero */}
       <section className="bg-gradient-to-r from-blue-900 to-cyan-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-20 text-center">
@@ -79,6 +80,14 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+
+      {/* Our Doctors */}
+      <div className="border-t border-gray-200">
+        <DoctorsSection
+          title="Meet Our Doctors"
+          subtitle="Experienced, caring specialists here to give you the best dental care."
+        />
+      </div>
 
       {/* Values */}
       <section className="bg-white border-t border-b">

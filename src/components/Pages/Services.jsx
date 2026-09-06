@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
+import { allServices } from "../../data/services";
 import {
   FaTooth,
   FaSmile,
   FaShieldAlt,
   FaUserMd,
   FaHeartbeat,
-  FaWallet,
   FaChild,
-  FaTeethOpen,
-  FaArrowRight,
   FaCheckCircle,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const categories = [
@@ -75,24 +74,9 @@ const categories = [
   },
 ];
 
-const allServices = [
-  "Dental Cleaning",
-  "Teeth Whitening",
-  "Dental Checkup",
-  "Root Canal Treatment",
-  "Crowns & Bridges",
-  "Dental Implants",
-  "Braces & Aligners",
-  "Tooth Extraction",
-  "Veneers",
-  "Dentures",
-  "Pediatric Care",
-  "Gum Treatment",
-];
-
 export default function Services() {
   return (
-    <div className="bg-gray-50 text-gray-800 pt-16">
+    <div className="bg-gray-50 text-gray-800">
       {/* Hero */}
       <section className="bg-gradient-to-r from-blue-900 to-cyan-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-20 text-center">

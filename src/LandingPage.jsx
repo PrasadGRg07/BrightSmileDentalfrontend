@@ -1,52 +1,18 @@
 import { Link } from "react-router-dom";
+import DoctorsSection from "./components/Doctors/DoctorsSection";
+import { services } from "./data/services";
 import {
   FaTooth,
   FaSmile,
   FaStar,
-  FaUserMd,
   FaClock,
   FaMapMarkerAlt,
   FaPhone,
   FaEnvelope,
   FaCheckCircle,
   FaShieldAlt,
-  FaHeartbeat,
-  FaWallet,
   FaArrowRight,
 } from "react-icons/fa";
-
-const services = [
-  {
-    icon: FaTooth,
-    title: "Dental Checkup",
-    desc: "Comprehensive oral examinations to catch issues early and keep your smile healthy.",
-  },
-  {
-    icon: FaSmile,
-    title: "Teeth Whitening",
-    desc: "Safe, professional whitening treatments for a brighter, more confident smile.",
-  },
-  {
-    icon: FaShieldAlt,
-    title: "Dental Cleaning",
-    desc: "Professional cleaning to remove plaque, tartar, and stains for fresh, healthy gums.",
-  },
-  {
-    icon: FaUserMd,
-    title: "Root Canal Treatment",
-    desc: "Painless, modern root canal therapy to save damaged teeth and relieve discomfort.",
-  },
-  {
-    icon: FaHeartbeat,
-    title: "Crowns & Bridges",
-    desc: "Restore missing or damaged teeth with durable, natural-looking restorations.",
-  },
-  {
-    icon: FaWallet,
-    title: "Orthodontics",
-    desc: "Braces and aligners to straighten teeth and correct bite issues for all ages.",
-  },
-];
 
 const whyUs = [
   {
@@ -185,6 +151,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Our Doctors */}
+      <DoctorsSection />
 
       {/* About Preview / CTA */}
       <section className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">

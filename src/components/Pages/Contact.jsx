@@ -8,6 +8,7 @@ import {
   FaPaperPlane,
   FaCheckCircle,
 } from "react-icons/fa";
+import { addMessage } from "../../utils/store";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -24,6 +25,7 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addMessage(form);
     setSent(true);
     setForm({ name: "", email: "", subject: "", message: "" });
   };
@@ -54,7 +56,7 @@ export default function Contact() {
   ];
 
   return (
-    <div className="bg-gray-50 text-gray-800 pt-16">
+    <div className="bg-gray-50 text-gray-800">
       {/* Hero */}
       <section className="bg-gradient-to-r from-blue-900 to-cyan-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-20 text-center">
