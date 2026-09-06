@@ -176,25 +176,6 @@ function Footer() {
         </div>
       </div>
 
-      {/* Map */}
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-6 py-10">
-          <h4 className="text-white font-semibold mb-4">Find Us Here</h4>
-          <div className="rounded-2xl overflow-hidden ring-1 ring-slate-700">
-            <iframe
-              title="Google Map Location"
-              src="https://www.google.com/maps/embed?pb=!4v1772529149932!6m8!1m7!1sCAoSHENJQUJJaEQxc2I4LVNKRUg0Mk9UWldvQkpMMTY.!2m2!1d27.71634353210872!2d85.32463993010771!3f105.44173812397725!4f-1.7223461063962304!5f0.7820865974627469"
-              width="100%"
-              height="320"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-        </div>
-      </div>
-
       {/* Bottom bar */}
       <div className="border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
