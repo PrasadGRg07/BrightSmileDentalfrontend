@@ -151,13 +151,6 @@ function Navbar() {
                   Login
                 </Link>
                 <Link
-                  to="/signup"
-                  onClick={() => setOpen(false)}
-                  className="text-center text-gray-600 px-4 py-2 rounded-xl text-sm font-medium"
-                >
-                  Sign Up
-                </Link>
-                <Link
                   to="/booking"
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold"

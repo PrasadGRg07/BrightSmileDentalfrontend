@@ -15,7 +15,7 @@ const navItems = [
   { to: "/admin/bookings", label: "Bookings", icon: FaCalendarCheck },
   { to: "/admin/messages", label: "Messages", icon: FaEnvelope },
   { to: "/admin/services", label: "Services", icon: FaTooth },
-  { to: "/admin/doctors", label: "Doctors", icon: FaUserMd },
+  { to: "/admin/doctors", label: "Staff", icon: FaUserMd },
 ];
 
 export default function AdminLayout() {

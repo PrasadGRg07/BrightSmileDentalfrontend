@@ -12,7 +12,6 @@ import DentistDashboard from "./components/Pages/DentistDashboard";
 import PatientDashboard from "./components/Pages/PatientDashboard";
 import ReceptionistDashboard from "./components/Pages/ReceptionistDashboard";
 import Login from "./components/Pages/Login";
-import Signup from "./components/Pages/Signup";
 import AdminLogin from "./admin/AdminLogin";
 import AdminLayout from "./admin/AdminLayout";
 import AdminDashboard from "./admin/Dashboard";
@@ -80,7 +79,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
