@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import DoctorsSection from "./components/Doctors/DoctorsSection";
 import { services } from "./data/services";
 import {
   FaTooth,
@@ -151,9 +150,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Our Doctors */}
-      <DoctorsSection />
 
       {/* About Preview / CTA */}
       <section className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
